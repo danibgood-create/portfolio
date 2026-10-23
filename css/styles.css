@@ -381,7 +381,9 @@ dialog.lb::backdrop { background: transparent; }
   .strip-inner .pair { height: 320px; }
 }
 @media (max-width: 640px) {
-  .hero { padding-top: 48px; padding-bottom: 72px; }
+  .hero { padding-top: 48px; padding-bottom: 150px; }
+  .scroll-hint { bottom: 20px; }
+  .scroll-hint i { height: 32px; }
   .contact-sec { padding-top: 88px; padding-bottom: 96px; }
   .index { padding-top: 64px; padding-bottom: 72px; }
   .cards { grid-template-columns: 1fr; }
