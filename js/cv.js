@@ -10,6 +10,7 @@
     entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
   $$('[data-reveal], .rule, .sep, .clients-title i').forEach((el) => io.observe(el));
+  document.addEventListener('i18n:applied', () => $$('[data-reveal], .rule').forEach((el) => { if (!el.classList.contains('in')) io.observe(el); }));
   requestAnimationFrame(() => $$('.cv-head [data-reveal], .cv-head .rule').forEach((el) => el.classList.add('in')));
   // dividers draw in
   $$('.sep, .clients-title i').forEach((el) => { el.style.transform = 'scaleX(0)'; el.style.transition = 'transform 1.2s cubic-bezier(.22,1,.36,1)'; });
@@ -29,7 +30,6 @@
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   update();
   topBtn.addEventListener('click', () => scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }));
-  $('.print').addEventListener('click', () => print());
 
   if (!fine || reduce) return;
 
@@ -40,12 +40,4 @@
   const loop = () => { gx += (tx - gx) * .12; gy += (ty - gy) * .12; glow.style.transform = `translate3d(${gx}px, ${gy}px, 0)`; requestAnimationFrame(loop); };
   loop();
 
-  /* Magnetic contacts */
-  $$('.magnetic').forEach((el) => {
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect();
-      el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .25}px, ${(e.clientY - r.top - r.height / 2) * .4}px)`;
-    });
-    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
-  });
 })();

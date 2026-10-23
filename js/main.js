@@ -12,6 +12,8 @@
     });
   }, { threshold: .15, rootMargin: '0px 0px -8% 0px' });
   $$('[data-reveal], .mask-line, .rule').forEach((el) => io.observe(el));
+  // after a language switch, text containing .mask-line is rebuilt: observe the new nodes
+  document.addEventListener('i18n:applied', () => $$('[data-reveal], .mask-line, .rule').forEach((el) => { if (!el.classList.contains('in')) io.observe(el); }));
   // hero in on load
   requestAnimationFrame(() => $$('.hero [data-reveal], .hero .mask-line, .hero .rule').forEach((el) => el.classList.add('in')));
 
@@ -20,8 +22,11 @@
   const links = $$('.side a[href^="#"]');
   const sections = links.map((a) => $(a.getAttribute('href')));
   const indexSec = $('#index');
-  const darkSel = '.hero, .case-banner, .strip, .show.dark, .legal';
-  const allLinks = $$('.side a');
+  const darkSel = '.hero, .case-banner, .strip, .show.dark, .contact-sec, .legal';
+  const sig = $('.sig');
+  const firstMe = $('.case-banner .me');
+  const allLinks = $$('.side a, .side .lang-switch');
+  let lastActive = null;
 
   /* ---------- Scroll-driven stuff (single rAF loop) ---------- */
   const bar = $('.progress');
@@ -37,6 +42,15 @@
     bar.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
     const visible = indexSec.getBoundingClientRect().bottom < vh * .4;
     side.classList.toggle('on', visible);
+    // sticky signature: appears once the first banner signature reaches the top
+    const sigOn = firstMe.getBoundingClientRect().top <= 20;
+    sig.classList.toggle('on', sigOn);
+    document.body.classList.toggle('sig-on', sigOn);
+    if (sigOn) {
+      const sr = sig.getBoundingClientRect();
+      const under = document.elementsFromPoint(sr.left + sr.width / 2, sr.top + sr.height / 2).find((el) => !sig.contains(el) && !side.contains(el));
+      sig.dataset.tone = under && under.closest(darkSel) ? 'dark' : 'light';
+    }
     if (visible) {
       // colour each link by the background beneath it
       const x = innerWidth - 40;
@@ -54,6 +68,18 @@
       const r = s.getBoundingClientRect();
       if (r.top < vh * .45 && r.bottom > vh * .45) active = links[i];
     });
+    // sliding indicator for the tablet/mobile tab bar
+    const ol = $('.side ol');
+    ol.classList.toggle('has-active', !!active);
+    if (active) {
+      const li = active.parentElement;
+      ol.style.setProperty('--x', li.offsetLeft + 'px'); ol.style.setProperty('--w', li.offsetWidth + 'px');
+      // keep the active tab in view when the bar is swipeable
+      if (active !== lastActive && ol.scrollWidth > ol.clientWidth + 1) {
+        ol.scrollTo({ left: li.offsetLeft - (ol.clientWidth - li.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' });
+      }
+    }
+    lastActive = active;
     links.forEach((a) => {
       const on = a === active;
       a.classList.toggle('active', on);
@@ -117,14 +143,6 @@
     el.addEventListener('pointerleave', () => { el.style.transform = ''; });
   });
 
-  /* ---------- Magnetic hero contacts ---------- */
-  $$('.magnetic').forEach((el) => {
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect();
-      el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .25}px, ${(e.clientY - r.top - r.height / 2) * .4}px)`;
-    });
-    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
-  });
 
   /* ---------- Scroll-on-hover for tall screenshots ---------- */
   $$('.scroll-shot').forEach((s) => {

@@ -8,24 +8,27 @@ body.cv-page { background: #fff; }
   background: rgba(29, 28, 38, .72); backdrop-filter: blur(16px) saturate(1.4);
   border: 1px solid rgba(255, 255, 255, .12); border-radius: 999px;
 }
-.page-links a, .page-links button, .page-link {
+.page-links a, .page-links button, .page-links .lang-switch, .page-link {
   display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border: 0; border-radius: 999px;
   background: transparent; cursor: pointer; font: 600 14px 'Gabarito', sans-serif; color: rgba(255, 255, 255, .8);
   transition: background .3s, color .3s, transform .4s var(--ease);
 }
 .page-link { padding: 8px 16px; }
 .page-links a:hover, .page-links button:hover, .page-link:hover { background: var(--orange); color: var(--blue-deep); }
+.page-links .lang-switch { color: rgba(255, 255, 255, .85); padding: 8px 14px; }
+.page-links .lang-switch:hover { background: var(--orange); color: var(--blue-deep); }
 .page-links a span, .page-link span { transition: transform .4s var(--ease); }
 .page-links a:hover span, .page-link:hover span { transform: translateX(4px); }
+.page-links a.print:hover span { transform: translateY(2px); }
 .page-links a:focus-visible, .page-links button:focus-visible, .page-link:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
 
 /* Header */
-.cv-head { padding: 20px 20px 0; background: #fff; }
-.cv-head-card { position: relative; overflow: hidden; isolation: isolate; background: #fff; color: #fff; max-width: 1326px; margin: 0 auto; }
+.cv-head { padding: 0; background: #fff; }
+.cv-head-card { position: relative; overflow: hidden; isolation: isolate; background: #fff; color: #fff; width: 100%; }
 .cv-head-card .bg-layer { inset: -25% 0; }
 .cv-head-card::after { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--blue); mix-blend-mode: hard-light; }
-.cv-head-inner { display: flex; align-items: center; gap: clamp(32px, 6vw, 80px); padding: 80px clamp(24px, 3.8vw, 50px); }
-.cv-head .avatar { width: 180px; height: 180px; margin: 0 10px; box-shadow: -40px 40px 40px -10px rgba(0, 0, 0, .5); }
+.cv-head-inner { display: flex; align-items: center; gap: clamp(32px, 6vw, 80px); max-width: 1366px; margin: 0 auto; padding: 96px clamp(24px, 5.86vw, 80px) 80px; }
+.cv-head .avatar { width: 180px; height: 180px; margin: 0; box-shadow: -40px 40px 40px -10px rgba(0, 0, 0, .5); }
 .cv-head-info { display: flex; flex-direction: column; gap: 24px; flex: 1; min-width: 0; }
 .cv-head .who h1 { font: 800 clamp(36px, 4.4vw, 56px)/1.1 'Gabarito', sans-serif; }
 .cv-head .who p { font: 600 18px 'Gabarito', sans-serif; color: var(--orange); }
@@ -43,8 +46,9 @@ body.cv-page { background: #fff; }
 .blk-title { display: flex; align-items: center; gap: 24px; }
 .blk-title .ico { display: grid; place-items: center; flex: none; width: 56px; height: 56px; border-radius: 50%; background: rgba(210, 204, 201, .15); transition: transform .6s var(--ease), background .4s; }
 .blk-title .ico.white { background: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); }
-.blk-title:hover .ico { transform: rotate(-12deg) scale(1.08); background: rgba(205, 120, 42, .15); }
+.blk-title:hover .ico { background: rgba(205, 120, 42, .15); }
 .blk-title img { width: 24px; height: 24px; }
+.blk-title .ic img { width: auto; height: auto; }
 .blk-title .eyebrow { text-transform: uppercase; }
 .sep { width: 40px; height: 1px; background: var(--muted); margin: 0 0 0 80px; transform-origin: 0 50%; }
 .cv-side .sep { margin: 0; }
@@ -103,6 +107,8 @@ body.cv-page { background: #fff; }
 .logos img { width: 144px; max-width: 100%; height: 90px; object-fit: contain; filter: grayscale(1); opacity: .7; transition: filter .5s, opacity .5s, transform .6s var(--ease); }
 .logos img:hover { filter: none; opacity: 1; transform: scale(1.08); }
 .logos img[src$=".svg"] { height: 24px; }
+/* the exported GSK PNG is pre-squashed; Figma stretches it into a 144x44 box */
+.logos img.gsk { height: 44px; object-fit: fill; }
 
 /* responsive */
 @media (max-width: 1100px) {
@@ -133,3 +139,4 @@ body.cv-page { background: #fff; }
   .logos img { filter: grayscale(1); }
   .tl-i, .hs, .skill { break-inside: avoid; }
 }
+
